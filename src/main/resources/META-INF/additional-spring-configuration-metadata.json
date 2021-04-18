@@ -1,0 +1,43 @@
+{
+  "properties": [
+    {
+      "name": "kaaWatchToken",
+      "type": "java.lang.String",
+      "description": "Description for kaaWatchToken."
+    },
+    {
+      "name": "kaaEndpoints.d291e666-f622-4ade-9a14-acbb6419ffd0",
+      "type": "java.lang.String",
+      "description": "Description for kaaEndpoints.d291e666-f622-4ade-9a14-acbb6419ffd0."
+    },
+    {
+      "name": "kaaEndpoints.12b063b9-d51d-4d4f-a715-b7fbd244ad06",
+      "type": "java.lang.String",
+      "description": "Description for kaaEndpoints.12b063b9-d51d-4d4f-a715-b7fbd244ad06."
+    },
+    {
+      "name": "baseendpoint",
+      "type": "java.lang.String",
+      "description": "Description for baseendpoint."
+    },
+    {
+      "name": "mqtt.server",
+      "type": "java.lang.String",
+      "description": "Description for mqtt.server."
+    },
+    {
+      "name": "mqtt.clientId",
+      "type": "java.lang.String",
+      "description": "Description for mqtt.clientId."
+    },
+    {
+      "name": "mqtt.connectionRetries",
+      "type": "java.lang.String",
+      "description": "Description for mqtt.connectionRetries."
+    },
+    {
+      "name": "mqtt.connectionTimeout",
+      "type": "java.lang.String",
+      "description": "Description for mqtt.connectionTimeout."
+    }
+  ] }
