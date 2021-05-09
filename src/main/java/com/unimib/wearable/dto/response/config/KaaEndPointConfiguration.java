@@ -1,4 +1,4 @@
-package com.unimib.wearable.dto;
+package com.unimib.wearable.dto.response.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

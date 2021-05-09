@@ -24,6 +24,7 @@ public class ClientProperties {
     private HttpProperties httpProperties = new HttpProperties();
     private Map<String, String> headers = new HashMap<>() {{
         put(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
     }};
 
     @Data
@@ -32,6 +33,8 @@ public class ClientProperties {
         private AuthorizationProperties authorizationProperties = new AuthorizationProperties();
 
         private String baseUrl;
+
+        private String authUrl;
 
         @Data
         public static class AuthorizationProperties {
