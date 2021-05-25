@@ -1,4 +1,4 @@
-package com.unimib.wearable.webClient;
+package com.unimib.wearable.webClient.clientProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,16 +11,11 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
-
-@Component
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @ConfigurationProperties(prefix = "webclient")
 public class ClientProperties {
 
-    private String bearerToken;
-
+    private Map<String,String> authProperties;
     private HttpProperties httpProperties = new HttpProperties();
     private Map<String, String> headers = new HashMap<>() {{
         put(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
@@ -30,16 +25,8 @@ public class ClientProperties {
     @Data
     public static class HttpProperties {
 
-        private AuthorizationProperties authorizationProperties = new AuthorizationProperties();
-
         private String baseUrl;
-
         private String authUrl;
-
-        @Data
-        public static class AuthorizationProperties {
-            private String username, pwd;
-        }
 
     }
 

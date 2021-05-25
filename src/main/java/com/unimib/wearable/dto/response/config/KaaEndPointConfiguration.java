@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.List;
 
 @AllArgsConstructor
 @Getter
 @Setter
-public class KaaEndPointConfiguration {
+public class KaaEndPointConfiguration implements Serializable {
 
     private String endpointId;
     private List<String> dataNames;

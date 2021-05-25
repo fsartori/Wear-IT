@@ -39,5 +39,10 @@
       "name": "mqtt.connectionTimeout",
       "type": "java.lang.String",
       "description": "Description for mqtt.connectionTimeout."
+    },
+    {
+      "name": "kaaMobileToken",
+      "type": "java.lang.String",
+      "description": "Description for kaaMobileToken."
     }
   ] }

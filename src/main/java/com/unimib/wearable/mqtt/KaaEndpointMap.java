@@ -1,4 +1,4 @@
-package com.unimib.wearable.config;
+package com.unimib.wearable.mqtt;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

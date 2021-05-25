@@ -9,13 +9,13 @@ import com.unimib.wearable.dto.response.auth.KaaEndpointAuthDTO;
 
 import java.io.IOException;
 
-public class TokenEndpointDeserializer extends StdDeserializer<KaaEndpointAuthDTO> {
+public class AuthEndpointDeserializer extends StdDeserializer<KaaEndpointAuthDTO> {
 
-    public TokenEndpointDeserializer() {
+    public AuthEndpointDeserializer() {
         this(null);
     }
 
-    public TokenEndpointDeserializer(Class<?> vc) {
+    public AuthEndpointDeserializer(Class<?> vc) {
         super(vc);
     }
 

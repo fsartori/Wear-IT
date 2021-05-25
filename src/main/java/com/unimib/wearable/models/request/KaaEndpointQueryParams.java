@@ -15,24 +15,24 @@ public class KaaEndpointQueryParams {
     private Long samplePeriod;
 
     public KaaEndpointQueryParams() {
-        fromDate = new Date(System.currentTimeMillis());
-        toDate = new Date(System.currentTimeMillis() - (24 * 60 * 60 * 1000));
+        fromDate = new Date(1601596800000L);
+        toDate = new Date(1601679600000L);
         includeTime = "both";
         sort = "ASC";
         samplePeriod = 1000L;
     }
 
     public KaaEndpointQueryParams(String includeTime, String sort) {
-        fromDate = new Date(System.currentTimeMillis());
-        toDate = new Date(System.currentTimeMillis() - (24 * 60 * 60 * 1000));
+        fromDate = new Date(1601596800000L);
+        toDate = new Date(1601679600000L);
         setIncludeTime(includeTime);
         setSort(sort);
         samplePeriod = 1000L;
     }
 
     public KaaEndpointQueryParams(String includeTime, String sort, Long samplePeriod) {
-        fromDate = new Date(System.currentTimeMillis());
-        toDate = new Date(System.currentTimeMillis() - (24 * 60 * 60 * 1000));
+        fromDate = new Date(1601596800000L);
+        toDate = new Date(1601679600000L);
         setIncludeTime(includeTime);
         setSort(sort);
         setSamplePeriod(samplePeriod);

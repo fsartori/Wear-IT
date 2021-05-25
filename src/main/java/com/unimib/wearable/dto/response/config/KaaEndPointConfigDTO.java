@@ -1,6 +1,7 @@
-package com.unimib.wearable.dto;
+package com.unimib.wearable.dto.response.config;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.unimib.wearable.dto.KaaValue;
 import com.unimib.wearable.dto.deserializer.ConfigEndpointDeserializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,12 +15,13 @@ import java.util.*;
 @JsonDeserialize(using = ConfigEndpointDeserializer.class)
 public class KaaEndPointConfigDTO {
 
-    private List<String> dataNames;
-
-    private List<KEP> kaaEP;
-
     //might be the final solution
     private String endpointId;
+
+    private List<String> dataNames;
+
+    private List<DeviceConfigurationResponseDTO> deviceConfigurationResponse;
+
 
     private Map<String,List<KaaValue>> sensor;
 
@@ -28,7 +30,7 @@ public class KaaEndPointConfigDTO {
         this.sensor = sensor;
     }
 
-    public KaaEndPointConfigDTO(List<KEP> kaaEP) {
-        this.kaaEP = kaaEP;
+    public KaaEndPointConfigDTO(List<DeviceConfigurationResponseDTO> deviceConfigurationResponse) {
+        this.deviceConfigurationResponse = deviceConfigurationResponse;
     }
 }

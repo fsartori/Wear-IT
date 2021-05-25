@@ -1,51 +1,49 @@
 package com.unimib.wearable.dto.deserializer;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.unimib.wearable.dto.KEP;
-import com.unimib.wearable.dto.KaaEndPointResponse;
-import io.swagger.v3.core.util.Json;
+import com.unimib.wearable.dto.response.config.DeviceConfigurationResponseDTO;
+import com.unimib.wearable.dto.response.config.KaaEndPointConfigDTO;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-public class EndpointDeserializer extends StdDeserializer<KaaEndPointResponse> {
+public class ConfigEndpointDeserializer extends StdDeserializer<KaaEndPointConfigDTO> {
 
-    public EndpointDeserializer() {
+    public ConfigEndpointDeserializer() {
         this(null);
     }
-    public EndpointDeserializer(Class<?> vc) {
+
+    public ConfigEndpointDeserializer(Class<?> vc) {
         super(vc);
     }
 
     @Override
-    public KaaEndPointResponse deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-        JsonNode node = p.getCodec().readTree(p);
+    public KaaEndPointConfigDTO deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
+        JsonNode root = jsonParser.getCodec().readTree(jsonParser);
 
-        List<String> appsName = new ArrayList<>();
+        List<String> applicationName = new ArrayList<>();
+        root.fieldNames().forEachRemaining(applicationName::add);
 
-        node.fieldNames().forEachRemaining(appsName::add);
-
-        return appsName.stream()
-                .map(appName -> createKEP(node.get(appName))).collect(Collectors.toList()).get(0);
+        return applicationName.stream()
+                .map(appName -> createKEP(root.get(appName)))
+                .collect(Collectors.toList()).stream()
+                .findFirst().orElseGet(KaaEndPointConfigDTO::new);
     }
 
-    private KaaEndPointResponse createKEP(JsonNode jsonNode){
-        List<KEP> kep = new ArrayList<>();
-        jsonNode.iterator().forEachRemaining(
-                x -> kep.add(new KEP(x.get("name").asText(), setValues(x.get("values")))));
+    private KaaEndPointConfigDTO createKEP(JsonNode jsonNode) {
+        List<DeviceConfigurationResponseDTO> deviceConfigurationResponseDTO = StreamSupport.stream(jsonNode.spliterator(), false)
+                .map(x -> new DeviceConfigurationResponseDTO(x.get("name").asText(), setValues(x.get("values")))).collect(Collectors.toList());
 
-        return new KaaEndPointResponse(kep);
+        return new KaaEndPointConfigDTO(deviceConfigurationResponseDTO);
     }
 
-    private List<String> setValues(JsonNode jsonNode){
-        List<String> values = new ArrayList<>();
-        jsonNode.iterator().forEachRemaining(x -> values.add(x.asText()));
-        return values;
+    private List<String> setValues(JsonNode jsonNode) {
+        return StreamSupport.stream(jsonNode.spliterator(),false).map(JsonNode::asText).collect(Collectors.toList());
     }
 }
