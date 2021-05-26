@@ -16,6 +16,7 @@ public class Constants {
     public static final String INCLUDE_TIME = "includeTime";
     public static final String SORT = "sort";
     public static final String PERIOD_SAMPLE = "periodSample";
+    public static final String OUTPUT_FORMAT = "format";
 
 
     public static final String BASE_QUERY_PARAMS = "%s?timeSeriesName=%s";

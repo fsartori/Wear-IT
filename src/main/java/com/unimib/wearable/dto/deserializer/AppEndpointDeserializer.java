@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.unimib.wearable.dto.response.data.KaaEndPointDataDTO;
 import com.unimib.wearable.dto.KaaValue;
+import com.unimib.wearable.dto.response.KaaMultiValue;
+import com.unimib.wearable.dto.response.KaaSingleValue;
+import com.unimib.wearable.dto.response.data.KaaEndPointDataDTO;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -16,6 +18,10 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class AppEndpointDeserializer extends StdDeserializer<KaaEndPointDataDTO> {
+
+    private static final String TIME_STAMP = "timestamp";
+    private static final String VALUE = "value";
+    private static final String VALUES = "values";
 
     public AppEndpointDeserializer() {
         this(null);
@@ -37,31 +43,45 @@ public class AppEndpointDeserializer extends StdDeserializer<KaaEndPointDataDTO>
         return new KaaEndPointDataDTO(setEndpointId(root), deviceDataSample);
     }
 
-    private String setEndpointId(JsonNode root) {
+    private String setEndpointId(final JsonNode root) {
         return StreamSupport.stream(root.spliterator(), false)
                 .findFirst()
                 .filter(node -> !node.isEmpty())
                 .map(x -> x.fieldNames().next()).orElse(StringUtils.EMPTY);
     }
 
-    private void putToMap(Map.Entry<String, JsonNode> entry, Map<String, List<KaaValue>> deviceDataSample) {
+    private void putToMap(final Map.Entry<String, JsonNode> entry, final Map<String, List<KaaValue>> deviceDataSample) {
         deviceDataSample.put(entry.getValue().fieldNames().next(), flatList(entry.getValue()));
     }
 
     //flat all data into a single list, each iteration is related to only one type of data
-    private List<KaaValue> flatList(JsonNode jsonNode) {
+    private List<KaaValue> flatList(final JsonNode jsonNode) {
         return StreamSupport.stream(jsonNode.spliterator(), false)
                 .flatMap(device -> createSampleList(device).stream()).collect(Collectors.toList());
     }
 
-    private List<KaaValue> createSampleList(JsonNode device) {
+    private List<KaaValue> createSampleList(final JsonNode device) {
         return StreamSupport.stream(device.spliterator(), false)
                 .map(this::createSample)
                 .collect(Collectors.toList());
     }
 
-    //sample data
-    private KaaValue createSample(JsonNode dataSample) {
-        return new KaaValue(dataSample.get("timestamp").asText(), dataSample.get("values").get("value").asText());
+    private KaaValue createSample(final JsonNode dataSample) {
+        return isMultiValue(dataSample) ? createMultiValue(dataSample) : createSingleValue(dataSample);
+    }
+
+
+    private boolean isMultiValue(final JsonNode jsonNode) {
+        return jsonNode.get(VALUES).size() > 1;
+    }
+
+    private KaaValue createSingleValue(final JsonNode dataSample) {
+        return new KaaSingleValue(dataSample.get(TIME_STAMP).asText(), dataSample.get(VALUES).get(VALUE).asText());
+    }
+
+    private KaaValue createMultiValue(final JsonNode dataSample) {
+        Map<String, String> values = new HashMap<>();
+        dataSample.fields().forEachRemaining(x -> values.put(x.getKey(), x.getValue().asText()));
+        return new KaaMultiValue(dataSample.get(TIME_STAMP).asText(), values);
     }
 }
