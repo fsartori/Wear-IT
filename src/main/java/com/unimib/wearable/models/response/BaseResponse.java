@@ -2,9 +2,13 @@ package com.unimib.wearable.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @AllArgsConstructor
 @Getter
-public class Sensor {
-    DataNames data;
+@Setter
+public class BaseResponse {
+
+    private final int status;
+    private final String message;
 }

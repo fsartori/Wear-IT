@@ -14,8 +14,4 @@ public class KaaEndpointDataRequest {
     private String endpointId;
     private Map<String, List<KaaValue>> values;
 
-    public KaaEndpointDataRequest(String endpointId, Map<String, List<KaaValue>> values) {
-        this.endpointId = endpointId;
-        this.values = values;
-    }
 }
