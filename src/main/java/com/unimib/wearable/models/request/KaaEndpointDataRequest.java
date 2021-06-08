@@ -1,6 +1,6 @@
-package com.unimib.wearable.dto.response.data;
+package com.unimib.wearable.models.request;
 
-import com.unimib.wearable.dto.KaaValue;
+import com.unimib.wearable.dto.response.data.KaaValue;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

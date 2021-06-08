@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.unimib.wearable.dto.KaaValue;
-import com.unimib.wearable.dto.response.KaaMultiValue;
-import com.unimib.wearable.dto.response.KaaSingleValue;
+import com.unimib.wearable.dto.response.data.KaaValue;
+import com.unimib.wearable.dto.response.data.KaaMultiValue;
+import com.unimib.wearable.dto.response.data.KaaSingleValue;
 import com.unimib.wearable.dto.response.data.KaaEndPointDataDTO;
 import org.apache.commons.lang3.StringUtils;
 

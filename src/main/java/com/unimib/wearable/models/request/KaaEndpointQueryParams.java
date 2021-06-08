@@ -5,6 +5,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 
+import static com.unimib.wearable.constants.Constants.*;
+
 @Data
 public class KaaEndpointQueryParams {
 
@@ -15,55 +17,32 @@ public class KaaEndpointQueryParams {
     private Long samplePeriod;
 
     public KaaEndpointQueryParams() {
-        fromDate = new Date(1601596800000L);
-        toDate = new Date(1601679600000L);
-        includeTime = "both";
-        sort = "ASC";
-        samplePeriod = 1000L;
+        init(new Date(DEFAULT_START_DATE), new Date(System.currentTimeMillis()), DEFAULT_INCLUDE_TIME, DEFAULT_DATA_SORT, DEFAULT_SAMPLE_PERIOD);
     }
 
     public KaaEndpointQueryParams(String includeTime, String sort) {
-        fromDate = new Date(1601596800000L);
-        toDate = new Date(1601679600000L);
-        setIncludeTime(includeTime);
-        setSort(sort);
-        samplePeriod = 1000L;
-    }
+        init(new Date(DEFAULT_START_DATE), new Date(System.currentTimeMillis()), includeTime, sort, DEFAULT_SAMPLE_PERIOD);
 
-    public KaaEndpointQueryParams(String includeTime, String sort, Long samplePeriod) {
-        fromDate = new Date(1601596800000L);
-        toDate = new Date(1601679600000L);
-        setIncludeTime(includeTime);
-        setSort(sort);
-        setSamplePeriod(samplePeriod);
-    }
-
-    public KaaEndpointQueryParams(Date fromDate, Date toDate, String includeTime, String sort) {
-        this.fromDate = fromDate;
-        this.toDate = toDate;
-        setIncludeTime(includeTime);
-        setSort(sort);
-        samplePeriod = 1000L;
     }
 
     public KaaEndpointQueryParams(Date fromDate, Date toDate, String includeTime, String sort, long samplePeriod) {
+      init(fromDate, toDate, includeTime, sort, samplePeriod);
+    }
+
+    private void init(final Date fromDate, final Date toDate, final String includeTime, final String sort, final long samplePeriod){
         this.fromDate = fromDate;
         this.toDate = toDate;
         setIncludeTime(includeTime);
         setSort(sort);
-        setSamplePeriod(samplePeriod);
+        this.samplePeriod = samplePeriod;
     }
 
-    private void setIncludeTime(String includeTime){
-        this.includeTime = StringUtils.isEmpty(includeTime) ? "both" : includeTime;
+    private void setIncludeTime(final String includeTime){
+        this.includeTime = StringUtils.isEmpty(includeTime) ? DEFAULT_INCLUDE_TIME : includeTime;
     }
 
-    private void setSort(String sort){
-        this.sort = StringUtils.isEmpty(sort) ? "ASC" : sort;
-    }
-
-    private void setSamplePeriod(Long samplePeriod){
-        this.samplePeriod = (samplePeriod != null) ? samplePeriod : 1000L;
+    private void setSort(final String sort){
+        this.sort = StringUtils.isEmpty(sort) ? DEFAULT_DATA_SORT : sort;
     }
 
 }

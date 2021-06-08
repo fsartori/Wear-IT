@@ -1,8 +1,8 @@
-package com.unimib.wearable.format.csv;
+package com.unimib.wearable.csv;
 
-import com.unimib.wearable.dto.KaaValue;
-import com.unimib.wearable.dto.response.KaaMultiValue;
-import com.unimib.wearable.dto.response.KaaSingleValue;
+import com.unimib.wearable.dto.response.data.KaaValue;
+import com.unimib.wearable.dto.response.data.KaaMultiValue;
+import com.unimib.wearable.dto.response.data.KaaSingleValue;
 import com.unimib.wearable.dto.response.data.KaaEndPointDataDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
@@ -18,10 +18,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.unimib.wearable.constants.Constants.*;
+
 @Slf4j
 public class CSVOutputFormatOutputFormatServiceImpl implements CSVOutputFormatService {
 
-    private static final String[] HEADERS = {"endpointId", "dateName", "timeStamp", "value"};
+    private static final String[] HEADERS = {ENDPOINT_ID, DATE_NAME, TIME_STAMP, VALUE};
 
     @Override
     public Optional<InputStreamResource> createCSVFile(final List<KaaEndPointDataDTO> kaaEndPointDataDTOS) {

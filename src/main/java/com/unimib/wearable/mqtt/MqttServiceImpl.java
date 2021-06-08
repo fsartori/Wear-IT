@@ -2,7 +2,7 @@ package com.unimib.wearable.mqtt;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.unimib.wearable.dto.response.data.KaaEndpointDataRequest;
+import com.unimib.wearable.models.request.KaaEndpointDataRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -10,12 +10,10 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Optional;
 
-@Component
 @Slf4j
 public class MqttServiceImpl implements MqttService {
 
@@ -84,7 +82,7 @@ public class MqttServiceImpl implements MqttService {
     }
 
     @Override
-    public boolean publishToServer(KaaEndpointDataRequest kaaEndPointDataDTO) throws JsonProcessingException, MqttException {
+    public boolean publishToServer(final KaaEndpointDataRequest kaaEndPointDataDTO) throws JsonProcessingException, MqttException {
         log.info("sending data to from kaaEndpoint ({}) to KaaServer", kaaEndPointDataDTO.getEndpointId());
         checkConnection();
         return publishData(kaaEndPointDataDTO, setMessage(kaaEndPointDataDTO));
@@ -97,25 +95,30 @@ public class MqttServiceImpl implements MqttService {
         }
     }
 
-    private MqttMessage setMessage(KaaEndpointDataRequest kaaEndPointDataDTO) throws JsonProcessingException {
+    private MqttMessage setMessage(final KaaEndpointDataRequest kaaEndPointDataDTO) throws JsonProcessingException {
         return new MqttMessage(new ObjectMapper().writeValueAsBytes(kaaEndPointDataDTO.getValues()));
     }
 
-    private boolean publishData(KaaEndpointDataRequest kaaEndPointDataDTO, MqttMessage mqttMessage) throws MqttException {
-        return sendData(getTopic(kaaEndPointDataDTO), kaaEndPointDataDTO, mqttMessage);
+    private boolean publishData(final KaaEndpointDataRequest kaaEndPointDataDTO, final MqttMessage mqttMessage) {
+        return getTopic(kaaEndPointDataDTO).map(topic -> sendData(topic, kaaEndPointDataDTO, mqttMessage)).orElse(false);
     }
 
-    private boolean sendData(Optional<String> topic, KaaEndpointDataRequest kaaEndPointDataDTO, MqttMessage mqttMessage) throws MqttException {
-        return topic.isPresent() && publish(kaaEndPointDataDTO, mqttMessage, topic.get());
+    private boolean sendData(final String topic, final KaaEndpointDataRequest kaaEndPointDataDTO, final MqttMessage mqttMessage) {
+        return publish(kaaEndPointDataDTO, mqttMessage, topic);
     }
 
-    private boolean publish(KaaEndpointDataRequest kaaEndPointDataDTO, MqttMessage mqttMessage, String topic) throws MqttException {
-        mqttClient.publish(kaaEndpoints.getEndpoints().get(kaaEndPointDataDTO.getEndpointId()), mqttMessage);
-        log.info("the data has been sent to KaaServer - topic:{}", topic);
-        return true;
+    private boolean publish(final KaaEndpointDataRequest kaaEndPointDataDTO, final MqttMessage mqttMessage, final String topic) {
+        try {
+            mqttClient.publish(kaaEndpoints.getEndpoints().get(kaaEndPointDataDTO.getEndpointId()), mqttMessage);
+            log.info("the data has been sent to KaaServer - topic:{}", topic);
+            return true;
+        } catch (MqttException e) {
+            log.error("an error has occurred while sending data to kaaServer : {}", e.getMessage());
+            return false;
+        }
     }
 
-    private Optional<String> getTopic(KaaEndpointDataRequest kaaEndPointDataDTO) {
+    private Optional<String> getTopic(final KaaEndpointDataRequest kaaEndPointDataDTO) {
         return Optional.ofNullable(kaaEndpoints.getEndpoints())
                 .filter(kaaEndpoint -> !CollectionUtils.isEmpty(kaaEndpoint) && kaaEndpoint.containsKey(kaaEndPointDataDTO.getEndpointId()))
                 .map(kaaEndpoint -> kaaEndpoint.get(kaaEndPointDataDTO.getEndpointId()));

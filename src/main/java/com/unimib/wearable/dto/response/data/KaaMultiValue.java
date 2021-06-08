@@ -1,6 +1,5 @@
-package com.unimib.wearable.dto.response;
+package com.unimib.wearable.dto.response.data;
 
-import com.unimib.wearable.dto.KaaValue;
 import lombok.Getter;
 
 import java.io.Serializable;

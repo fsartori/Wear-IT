@@ -2,18 +2,17 @@ package com.unimib.wearable.kaaService;
 
 import com.unimib.wearable.dto.response.config.KaaEndPointConfiguration;
 import com.unimib.wearable.models.request.KaaEndpointQueryParams;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import static com.unimib.wearable.constants.Constants.*;
 
-
+@Slf4j
 public abstract class KaaServiceImplAbstract {
 
     @Value("${base-repo}")
@@ -26,14 +25,14 @@ public abstract class KaaServiceImplAbstract {
     protected String appName;
 
     protected String createUrl(final String baseUrl, final KaaEndPointConfiguration kaaEndPointConfiguration, final KaaEndpointQueryParams kaaEndpointQueryParams) {
-        return String.format(ENDPOINT_BASE_FORMAT, baseUrl, StringUtils.join(kaaEndPointConfiguration.getDataNames(), ","), kaaEndPointConfiguration.getEndpointId()) + setQueryParams(kaaEndpointQueryParams);
+        return String.format(ENDPOINT_BASE_FORMAT, baseUrl, StringUtils.join(kaaEndPointConfiguration.getDataNames(), ","), kaaEndPointConfiguration.getEndpointId()) + setUrlQueryParams(kaaEndpointQueryParams);
     }
 
     protected String createUrl(final String baseUrl, final String timeSeriesName, final KaaEndpointQueryParams kaaEndpointQueryParams) {
-        return String.format(BASE_QUERY_PARAMS, baseUrl, timeSeriesName) + setQueryParams(kaaEndpointQueryParams);
+        return String.format(BASE_QUERY_PARAMS, baseUrl, timeSeriesName) + setUrlQueryParams(kaaEndpointQueryParams);
     }
 
-    private String setQueryParams(final KaaEndpointQueryParams kaaEndpointQueryParams) {
+    private String setUrlQueryParams(final KaaEndpointQueryParams kaaEndpointQueryParams) {
         String queryParams = String.format(FROM_DATE, Objects.nonNull(kaaEndpointQueryParams.getFromDate()) ?
                 setDate(kaaEndpointQueryParams.getFromDate()) : setDate(new Date(Long.parseLong("OL"))));
 
@@ -55,38 +54,17 @@ public abstract class KaaServiceImplAbstract {
         return new SimpleDateFormat(DATE_FORMAT).format(date);
     }
 
-    protected KaaEndpointQueryParams setQueryParams(String fromDate, String toDate, String includeTime, String sort, String periodSample) {
+    protected KaaEndpointQueryParams setQueryParamsFromRequest(String fromDate, String toDate, String includeTime, String sort, String samplePeriod) {
         KaaEndpointQueryParams kaaEndpointQueryParams;
 
-        long pS = StringUtils.isEmpty(fromDate) ? 1000L : Long.parseLong(periodSample);
-        long fD = StringUtils.isEmpty(fromDate) ? 1601596800000L : Long.parseLong(fromDate);
-        long tD = StringUtils.isEmpty(fromDate) ? 1601679600000L : Long.parseLong(toDate);
-
         try {
-            Date from = new Date(fD);
-            Date to = new Date(tD);
-
-            kaaEndpointQueryParams = (pS < 1000L) ?
-                    new KaaEndpointQueryParams(from, to, includeTime, sort) :
-                    new KaaEndpointQueryParams(from, to, includeTime, sort, pS);
-
+            kaaEndpointQueryParams = new KaaEndpointQueryParams(new Date(Long.parseLong(fromDate)), new Date(Long.parseLong(toDate)), includeTime, sort, Long.parseLong(samplePeriod));
         } catch (Exception e) {
-            kaaEndpointQueryParams = (1000L > pS) ?
-                    new KaaEndpointQueryParams(includeTime, sort) :
-                    new KaaEndpointQueryParams(includeTime, sort, pS);
+            log.error("An error occurred while parsing data from request: {}", e.getMessage());
+            kaaEndpointQueryParams = new KaaEndpointQueryParams(includeTime, sort);
         }
 
         return kaaEndpointQueryParams;
     }
 
-    private Map<String, String> setQueryParam(final KaaEndpointQueryParams kaaEndpointQueryParams){
-        Map<String, String> params = new HashMap<>();
-
-        params.put(FROM_DATE, setDate(kaaEndpointQueryParams.getFromDate()));
-        params.put(TO_DATE, setDate(kaaEndpointQueryParams.getToDate()));
-        params.put(INCLUDE_TIME_FORMAT, kaaEndpointQueryParams.getIncludeTime());
-        params.put(SORT_FORMAT, kaaEndpointQueryParams.getSort());
-
-        return params;
-    }
 }

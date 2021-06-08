@@ -1,4 +1,4 @@
-package com.unimib.wearable.format.csv;
+package com.unimib.wearable.csv;
 
 import com.unimib.wearable.dto.response.data.KaaEndPointDataDTO;
 import org.springframework.core.io.InputStreamResource;

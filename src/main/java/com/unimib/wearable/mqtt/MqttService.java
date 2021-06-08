@@ -1,7 +1,7 @@
 package com.unimib.wearable.mqtt;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.unimib.wearable.dto.response.data.KaaEndpointDataRequest;
+import com.unimib.wearable.models.request.KaaEndpointDataRequest;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
 public interface MqttService {

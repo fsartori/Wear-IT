@@ -44,21 +44,30 @@ spring:
 
 redis-host: localhost
 redis-port: 6379
-time-to-live: 0 0/10 * * * *
+redis-ttl:
+  cacheExpiration:
+    applicationNames-cache: 60
+
 
 resilience4j:
   circuitbreaker:
-    instances:
+    configs:
       dataNameService:
-        registerHealthIndicator: true
-        eventConsumerBufferSize: 10
-        automaticTransitionFromOpenToHalfOpenEnabled: true
-        failureRateThreshold: 50
-        minimumNumberOfCalls: 3
-        permittedNumberOfCallsInHalfOpenState: 3
         slidingWindowSize: 10
+        slidingWindowType: TIME_BASED
+        failureRateThreshold: 50
         waitDurationInOpenState: 5s
-        slidingWindowType: COUNT_BASED
+        minimumNumberOfCalls: 10
+        permittedNumberOfCallsInHalfOpenState: 1
+    instances:
+      mycircuitbreaker:
+        baseConfig: dataNameService
+        failureRateThreshold: 33
+  timelimiter:
+    instances:
+      kaaServiceCB:
+        timeoutDuration: 30s
+        cancelRunningFuture: true
 
 management:
   health:

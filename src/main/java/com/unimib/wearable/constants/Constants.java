@@ -27,5 +27,13 @@ public class Constants {
     public static final String ENDPOINT_BASE_FORMAT = BASE_QUERY_PARAMS + "&endpointId=%s";
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
-    public static final String DATA_NAME_SERVICE = "dataNameService";
+    public static final String DATE_NAME = "dateName";
+    public static final String TIME_STAMP = "timeStamp";
+    public static final String VALUE = "value";
+    public static final String MESSAGE = "message";
+
+    public static final long DEFAULT_SAMPLE_PERIOD = 1000L;
+    public static final long DEFAULT_START_DATE = 1590969600000L;
+    public static final String DEFAULT_INCLUDE_TIME = "both";
+    public static final String DEFAULT_DATA_SORT = "ASC";
 }

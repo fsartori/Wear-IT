@@ -1,4 +1,4 @@
-package com.unimib.wearable.response.models;
+package com.unimib.wearable.models.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

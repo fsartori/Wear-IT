@@ -1,4 +1,4 @@
-package com.unimib.wearable.dto;
+package com.unimib.wearable.dto.response.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

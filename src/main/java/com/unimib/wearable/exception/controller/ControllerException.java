@@ -1,8 +1,7 @@
 package com.unimib.wearable.exception.controller;
 
 import com.unimib.wearable.exception.RequestException;
-import com.unimib.wearable.response.BaseResponse;
-import com.unimib.wearable.response.KaaResponse;
+import com.unimib.wearable.models.response.BaseResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,4 +15,5 @@ public class ControllerException {
                 .status(requestException.getCode())
                 .body(new BaseResponse(requestException.getCode(), requestException.getMessage()));
     }
+
 }

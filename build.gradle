@@ -29,6 +29,8 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-ui:1.5.7'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
     implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.5'
+    implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml'
+
     implementation group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.5'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
@@ -36,10 +38,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation group: 'io.github.resilience4j', name: 'resilience4j-spring-boot2', version: '1.7.0'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-circuitbreaker-reactor-resilience4j', version: '2.0.2'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

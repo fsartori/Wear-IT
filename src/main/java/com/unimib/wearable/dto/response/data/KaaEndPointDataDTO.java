@@ -1,9 +1,7 @@
 package com.unimib.wearable.dto.response.data;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.unimib.wearable.dto.KaaValue;
 import com.unimib.wearable.dto.deserializer.AppEndpointDeserializer;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
