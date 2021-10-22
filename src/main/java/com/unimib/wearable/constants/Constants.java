@@ -36,4 +36,6 @@ public class Constants {
     public static final long DEFAULT_START_DATE = 1590969600000L;
     public static final String DEFAULT_INCLUDE_TIME = "both";
     public static final String DEFAULT_DATA_SORT = "ASC";
+
+    public static final Boolean PARALLEL_STREAM = false;
 }

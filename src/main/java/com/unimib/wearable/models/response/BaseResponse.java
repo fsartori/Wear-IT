@@ -1,14 +1,12 @@
 package com.unimib.wearable.models.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.http.HttpStatus;
 
-@AllArgsConstructor
-@Getter
-@Setter
+@Builder
+@Data
 public class BaseResponse {
 
-    private final int status;
+    private final HttpStatus status;
     private final String message;
 }

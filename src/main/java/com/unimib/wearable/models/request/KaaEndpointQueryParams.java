@@ -1,5 +1,6 @@
 package com.unimib.wearable.models.request;
 
+import lombok.Builder;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -7,6 +8,7 @@ import java.util.Date;
 
 import static com.unimib.wearable.constants.Constants.*;
 
+@Builder
 @Data
 public class KaaEndpointQueryParams {
 
@@ -18,11 +20,6 @@ public class KaaEndpointQueryParams {
 
     public KaaEndpointQueryParams() {
         init(new Date(DEFAULT_START_DATE), new Date(System.currentTimeMillis()), DEFAULT_INCLUDE_TIME, DEFAULT_DATA_SORT, DEFAULT_SAMPLE_PERIOD);
-    }
-
-    public KaaEndpointQueryParams(String includeTime, String sort) {
-        init(new Date(DEFAULT_START_DATE), new Date(System.currentTimeMillis()), includeTime, sort, DEFAULT_SAMPLE_PERIOD);
-
     }
 
     public KaaEndpointQueryParams(Date fromDate, Date toDate, String includeTime, String sort, long samplePeriod) {

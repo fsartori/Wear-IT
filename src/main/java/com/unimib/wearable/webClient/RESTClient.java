@@ -8,7 +8,6 @@ import com.unimib.wearable.exception.RequestException;
 import com.unimib.wearable.exception.ResponseErrorHandler;
 import com.unimib.wearable.webClient.clientProperties.ClientProperties;
 import com.unimib.wearable.webClient.httpMessageConverter.ObjectToUrlEncodedConverter;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -19,7 +18,6 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import java.util.Optional;
 
 @Slf4j
-@Data
 public class RESTClient {
 
     private final RestTemplate restTemplate;
@@ -49,7 +47,7 @@ public class RESTClient {
     private void setAuthorizationHeaders(ClientProperties clientProperties) throws RequestException {
         KaaEndpointAuthDTO kaaEndpointAuthDTO = getKaaToken(clientProperties);
         httpHeaders.set(HttpHeaders.AUTHORIZATION, "Bearer " + kaaEndpointAuthDTO.getToken());
-        tokenValidity = kaaEndpointAuthDTO.getExpires()/ SECONDS_IN_DAY;
+        tokenValidity = kaaEndpointAuthDTO.getExpires() / SECONDS_IN_DAY;
     }
 
     private void setRequestEntity() {
@@ -68,7 +66,7 @@ public class RESTClient {
                 .filter(ar -> StringUtils.isNotEmpty(ar.getToken()))
                 .orElseThrow(() -> {
                     log.error("Empty token from auth endpoint");
-                    return new RequestException(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Unable to retrieve token from auth endpoint");
+                    return new RequestException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to retrieve token from auth endpoint");
                 });
     }
 
@@ -77,10 +75,12 @@ public class RESTClient {
     }
 
     public ResponseEntity<KaaEndPointConfigDTO> getKaaEndpointConfigurations(String url) {
+        log.info(url);
         return restTemplate.exchange(url, HttpMethod.GET, httpEntity, KaaEndPointConfigDTO.class);
     }
 
     public ResponseEntity<KaaEndPointDataDTO> getKaaEndpointData(String url) {
+        log.info(url);
         return restTemplate.exchange(url, HttpMethod.GET, httpEntity, KaaEndPointDataDTO.class);
     }
 

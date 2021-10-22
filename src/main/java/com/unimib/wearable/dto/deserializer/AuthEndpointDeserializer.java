@@ -1,7 +1,6 @@
 package com.unimib.wearable.dto.deserializer;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
@@ -20,8 +19,11 @@ public class AuthEndpointDeserializer extends StdDeserializer<KaaEndpointAuthDTO
     }
 
     @Override
-    public KaaEndpointAuthDTO deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public KaaEndpointAuthDTO deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
         JsonNode root = jsonParser.getCodec().readTree(jsonParser);
-        return new KaaEndpointAuthDTO(root.get("access_token").asText(), root.get("expires_in").asLong());
+        return KaaEndpointAuthDTO.builder()
+                .token(root.get("access_token").asText())
+                .expires(root.get("expires_in").asLong())
+                .build();
     }
 }

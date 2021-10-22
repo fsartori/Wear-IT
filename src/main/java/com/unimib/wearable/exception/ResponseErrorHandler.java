@@ -22,13 +22,13 @@ public class ResponseErrorHandler extends DefaultResponseErrorHandler {
 
     @Override
     public void handleError(ClientHttpResponse httpResponse) throws IOException {
-        throw new RequestException(httpResponse.getRawStatusCode(), getErrorMessage(httpResponse));
+        throw new RequestException(httpResponse.getStatusCode(), getErrorMessage(httpResponse));
     }
 
     private String getErrorMessage(ClientHttpResponse httpResponse) {
         try {
             JSONObject jsonObject = new JSONObject(new String(getResponseBody(httpResponse)));
-            return Optional.of(jsonObject.getString(MESSAGE)).orElse("unable to parse error message, no message present");
+            return Optional.of(jsonObject.getString(MESSAGE)).orElse("unable to parse error message, no message present in the body response");
         } catch (Exception e) {
             log.error("unable to parse error message from response: {}", e.getMessage());
             return "unable to parse error message from response";

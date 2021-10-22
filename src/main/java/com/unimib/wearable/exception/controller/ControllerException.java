@@ -12,8 +12,8 @@ public class ControllerException {
     @ExceptionHandler(value = RequestException.class)
     public ResponseEntity<BaseResponse> responseErrorHandler(RequestException requestException){
         return ResponseEntity
-                .status(requestException.getCode())
-                .body(new BaseResponse(requestException.getCode(), requestException.getMessage()));
+                .status(requestException.getStatusCode())
+                .body(BaseResponse.builder().status(requestException.getStatusCode()).message(requestException.getMessage()).build());
     }
 
 }

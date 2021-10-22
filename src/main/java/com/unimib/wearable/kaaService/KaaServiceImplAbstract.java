@@ -1,10 +1,12 @@
 package com.unimib.wearable.kaaService;
 
 import com.unimib.wearable.dto.response.config.KaaEndPointConfiguration;
+import com.unimib.wearable.exception.RequestException;
 import com.unimib.wearable.models.request.KaaEndpointQueryParams;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -54,14 +56,14 @@ public abstract class KaaServiceImplAbstract {
         return new SimpleDateFormat(DATE_FORMAT).format(date);
     }
 
-    protected KaaEndpointQueryParams setQueryParamsFromRequest(String fromDate, String toDate, String includeTime, String sort, String samplePeriod) {
+    protected KaaEndpointQueryParams setQueryParamsFromRequest(final String fromDate, final String toDate, final String includeTime, final String sort, final String samplePeriod) throws RequestException {
         KaaEndpointQueryParams kaaEndpointQueryParams;
 
         try {
             kaaEndpointQueryParams = new KaaEndpointQueryParams(new Date(Long.parseLong(fromDate)), new Date(Long.parseLong(toDate)), includeTime, sort, Long.parseLong(samplePeriod));
         } catch (Exception e) {
             log.error("An error occurred while parsing data from request: {}", e.getMessage());
-            kaaEndpointQueryParams = new KaaEndpointQueryParams(includeTime, sort);
+            throw new RequestException(HttpStatus.BAD_REQUEST, "Bad Request: unable to parse request param" + e.getMessage());
         }
 
         return kaaEndpointQueryParams;

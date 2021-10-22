@@ -11,6 +11,8 @@ import com.unimib.wearable.mqtt.MqttService;
 import com.unimib.wearable.mqtt.MqttServiceImpl;
 import com.unimib.wearable.webClient.RESTClient;
 import com.unimib.wearable.webClient.clientProperties.ClientProperties;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.context.annotation.Bean;
@@ -22,9 +24,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class Config {
 
     @Bean
-    public KaaService kaaService(RESTClient restClient,
-                                 RedisTemplate<String, Object> redisTemplate,
-                                 CircuitBreakerFactory circuitBreakerFactory) {
+    public KaaService kaaService(RESTClient restClient, RedisTemplate<String, Object> redisTemplate, CircuitBreakerFactory circuitBreakerFactory) {
         return new KaaServiceImpl(restClient, redisTemplate, circuitBreakerFactory.create("kaaServiceCB"));
     }
 
@@ -37,7 +37,6 @@ public class Config {
     public ClientProperties clientProperties() {
         return new ClientProperties();
     }
-
 
     @Bean
     public CSVOutputFormatService csvOutputFormatService() {
@@ -57,5 +56,13 @@ public class Config {
     @Bean
     public MqttClientProperties mqttClientProperties(){
         return new MqttClientProperties();
+    }
+
+    @Bean
+    public OpenAPI wearableOpenAPI() {
+        return new OpenAPI().info(new Info()
+                .title("wearable API")
+                .description("This API allows to communicate with KaaIoT Enterprise platform")
+                .version("1"));
     }
 }

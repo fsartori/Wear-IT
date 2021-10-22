@@ -1,5 +1,10 @@
-spring.application.name: wearable-api
-server.servlet.context-path: /middleware
+spring.application.name: WearSensorAPI
+spring.banner.image.location: classpath:static/REDS_Logo.png
+spring.banner.image.width: 60
+spring.banner.image.height: 40
+spring.banner.image.pixelmode: BLOCK
+
+server.servlet.context-path: /wearsensor-api
 server.port: 8080
 
 webclient:

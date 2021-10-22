@@ -4,9 +4,11 @@ import com.unimib.wearable.dto.response.config.DeviceConfigurationResponseDTO;
 import com.unimib.wearable.dto.response.config.KaaEndPointConfigDTO;
 import com.unimib.wearable.dto.response.config.KaaEndPointConfiguration;
 import com.unimib.wearable.dto.response.data.KaaEndPointDataDTO;
+import com.unimib.wearable.exception.RequestException;
 import com.unimib.wearable.models.request.KaaEndpointQueryParams;
 import com.unimib.wearable.models.response.KaaApplication;
 import com.unimib.wearable.webClient.RESTClient;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,27 +18,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Slf4j
 public class KaaServiceImpl extends KaaServiceImplAbstract implements KaaService {
 
-
-    protected final RedisTemplate<String, Object> redisTemplate;
     private final RESTClient restClient;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final CircuitBreaker circuitBreaker;
 
-    public KaaServiceImpl(RESTClient restClient, RedisTemplate<String, Object> redisTemplate, CircuitBreaker circuitBreaker) {
-        this.restClient = restClient;
-        this.redisTemplate = redisTemplate;
-        this.circuitBreaker = circuitBreaker;
-    }
-
-    public List<String> applicationNameFallback(String error) {
+    private List<String> applicationNameFallback(String error) {
         log.error("circuit breaker enable, an error has occurred: {}", error);
-        return Optional.ofNullable((List<String>) redisTemplate.opsForValue().get("applicationNames-cache::appNames")).orElse(new ArrayList<>());
+        return Optional.ofNullable((List<String>) redisTemplate.opsForValue().get("applicationNames-cache::appNames"))
+                .orElse(new ArrayList<>());
     }
 
     @CachePut(value = "applicationNames-cache", key = "'appNames'", condition = "#result != null")
@@ -57,17 +55,21 @@ public class KaaServiceImpl extends KaaServiceImplAbstract implements KaaService
     @Override
     public KaaApplication getApplicationDataNames(final List<String> endpointId) {
         log.info("getApplicationDataNames from endpoints {}", endpointId);
-        return new KaaApplication(appName, getConfigurations(getKaaEndpoint(endpointId)));
+        return KaaApplication.builder()
+                .applicationName(appName)
+                .endpoints(getConfigurations(getKaaEndpoint(endpointId)))
+                .build();
     }
 
     @Cacheable(value = "endpoint-cache", key = "#fromDate+'-'+#toDate+'-'+#includeTime+'-'+#sort+'-'+#samplePeriod")
     @Override
-    public List<KaaEndPointDataDTO> getKaaEndPointsData(final String fromDate, final String toDate, final String includeTime, final String sort, final String samplePeriod) {
-        KaaApplication kaaApplication = getApplicationDataNames(new ArrayList<>());
+    public List<KaaEndPointDataDTO> getKaaEndPointsData(final String fromDate, final String toDate, final String includeTime, final String sort, final String samplePeriod) throws RequestException {
+        KaaEndpointQueryParams queryParams = setQueryParamsFromRequest(fromDate, toDate, includeTime, sort, samplePeriod);
+        KaaApplication kaaApplication = getApplicationDataNames(Collections.emptyList());
         List<KaaEndPointConfiguration> kaaEndPointConfigurations = kaaApplication.getEndpoints();
         return kaaEndPointConfigurations
                 .stream()
-                .map(kaaEndpointConfiguration -> getData(kaaEndpointConfiguration, setQueryParamsFromRequest(fromDate, toDate, includeTime, sort, samplePeriod)))
+                .map(kaaEndpointConfiguration -> getData(kaaEndpointConfiguration, queryParams))
                 .collect(Collectors.toList());
     }
 
@@ -84,7 +86,10 @@ public class KaaServiceImpl extends KaaServiceImplAbstract implements KaaService
         return kaaEndPointDataDTO
                 .stream()
                 .filter(kaaEndPoint -> !CollectionUtils.isEmpty(kaaEndPoint.getValues()))
-                .map(kaaEndPoint -> new KaaEndPointConfiguration(kaaEndPoint.getEndpointId(), new ArrayList<>(kaaEndPoint.getValues().keySet())))
+                .map(kaaEndPoint -> KaaEndPointConfiguration.builder()
+                        .endpointId(kaaEndPoint.getEndpointId())
+                        .dataNames(new ArrayList<>(kaaEndPoint.getValues().keySet()))
+                        .build())
                 .collect(Collectors.toList());
     }
 
@@ -96,7 +101,10 @@ public class KaaServiceImpl extends KaaServiceImplAbstract implements KaaService
     private List<KaaEndPointConfiguration> getKaaEndPointConfiguration(final List<String> endpointId, final List<String> dataNames) {
         return endpointId
                 .stream()
-                .map(kaaEndPointConfiguration -> new KaaEndPointConfiguration(kaaEndPointConfiguration, dataNames))
+                .map(kaaEndPointConfiguration -> KaaEndPointConfiguration.builder()
+                        .endpointId(kaaEndPointConfiguration)
+                        .dataNames(dataNames)
+                        .build())
                 .collect(Collectors.toList());
     }
 

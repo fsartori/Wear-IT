@@ -1,17 +1,14 @@
 package com.unimib.wearable.dto.response.config;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
 
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 public class KaaEndPointConfiguration implements Serializable {
 
     private String endpointId;

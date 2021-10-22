@@ -1,17 +1,18 @@
 package com.unimib.wearable.exception;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 
 @Getter
 public class RequestException extends IOException {
 
-    private final int code;
+    private final HttpStatus statusCode;
 
-    public RequestException(int code, String message){
+    public RequestException(HttpStatus statusCode, String message){
         super(message);
-        this.code = code;
+        this.statusCode = statusCode;
     }
 
 }

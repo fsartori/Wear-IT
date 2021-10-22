@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static com.unimib.wearable.constants.Constants.PARALLEL_STREAM;
+
 public class ConfigEndpointDeserializer extends StdDeserializer<KaaEndPointConfigDTO> {
 
     public ConfigEndpointDeserializer() {
@@ -33,17 +35,27 @@ public class ConfigEndpointDeserializer extends StdDeserializer<KaaEndPointConfi
         return applicationName.stream()
                 .map(appName -> createKEP(root.get(appName)))
                 .collect(Collectors.toList()).stream()
-                .findFirst().orElseGet(KaaEndPointConfigDTO::new);
+                .findFirst()
+                .orElseGet(KaaEndPointConfigDTO::new);
     }
 
     private KaaEndPointConfigDTO createKEP(JsonNode jsonNode) {
-        List<DeviceConfigurationResponseDTO> deviceConfigurationResponseDTO = StreamSupport.stream(jsonNode.spliterator(), false)
-                .map(x -> new DeviceConfigurationResponseDTO(x.get("name").asText(), setValues(x.get("values")))).collect(Collectors.toList());
+        List<DeviceConfigurationResponseDTO> deviceConfigurationResponseDTO =
+                StreamSupport.stream(jsonNode.spliterator(), PARALLEL_STREAM)
+                        .map(x -> DeviceConfigurationResponseDTO.builder()
+                                .name(x.get("name").asText())
+                                .values(setValues(x.get("values")))
+                                .build())
+                        .collect(Collectors.toList());
 
-        return new KaaEndPointConfigDTO(deviceConfigurationResponseDTO);
+        return KaaEndPointConfigDTO.builder()
+                .deviceConfigurationResponse(deviceConfigurationResponseDTO)
+                .build();
     }
 
     private List<String> setValues(JsonNode jsonNode) {
-        return StreamSupport.stream(jsonNode.spliterator(),false).map(JsonNode::asText).collect(Collectors.toList());
+        return StreamSupport.stream(jsonNode.spliterator(), PARALLEL_STREAM)
+                .map(JsonNode::asText)
+                .collect(Collectors.toList());
     }
 }

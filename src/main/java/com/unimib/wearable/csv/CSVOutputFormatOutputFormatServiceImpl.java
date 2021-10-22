@@ -45,8 +45,7 @@ public class CSVOutputFormatOutputFormatServiceImpl implements CSVOutputFormatSe
 
     private Optional<ByteArrayInputStream> write(final List<KaaEndPointDataDTO> kaaEndPointDataDTOS, final CSVPrinter csvPrinter, final ByteArrayOutputStream out) {
         try {
-            kaaEndPointDataDTOS
-                    .forEach(kaaEndPointDataDTO -> printCSV(kaaEndPointDataDTO.getValues(), csvPrinter, kaaEndPointDataDTO.getEndpointId()));
+            kaaEndPointDataDTOS.forEach(kaaEndPointDataDTO -> printCSV(kaaEndPointDataDTO.getValues(), csvPrinter, kaaEndPointDataDTO.getEndpointId()));
             csvPrinter.flush();
             return Optional.of(new ByteArrayInputStream(out.toByteArray()));
         } catch (IOException e) {
@@ -66,11 +65,11 @@ public class CSVOutputFormatOutputFormatServiceImpl implements CSVOutputFormatSe
         }
     }
 
-    private String getValue(KaaValue kaaValue) {
+    private String getValue(final KaaValue kaaValue) {
         return kaaValue instanceof KaaSingleValue ? ((KaaSingleValue) kaaValue).getValue() : getMultiValue(((KaaMultiValue) kaaValue).getValues());
     }
 
-    private String getMultiValue(Map<String, String> multiValue) {
+    private String getMultiValue(final Map<String, String> multiValue) {
         return multiValue.entrySet().stream()
                 .map(entry -> entry.getKey() + ":" + entry.getValue())
                 .collect(Collectors.joining(","));

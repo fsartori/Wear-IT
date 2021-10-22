@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.unimib.wearable.dto.response.data.KaaValue;
 import com.unimib.wearable.dto.deserializer.ConfigEndpointDeserializer;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.*;
 
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,10 +23,6 @@ public class KaaEndPointConfigDTO {
 
     private List<DeviceConfigurationResponseDTO> deviceConfigurationResponse;
 
-
     private Map<String,List<KaaValue>> sensor;
 
-    public KaaEndPointConfigDTO(List<DeviceConfigurationResponseDTO> deviceConfigurationResponse) {
-        this.deviceConfigurationResponse = deviceConfigurationResponse;
-    }
 }
