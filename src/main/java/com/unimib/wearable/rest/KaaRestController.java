@@ -40,6 +40,7 @@ public class KaaRestController extends AbstractController {
     private final MqttService mqttService;
     private final KaaEndpointMap kaaEndpointMap;
 
+    @Operation(summary = "Returns all the sensors available")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ok", content = @Content(schema = @Schema(implementation = DataNames.class))),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
@@ -54,6 +55,7 @@ public class KaaRestController extends AbstractController {
                                 .build()));
     }
 
+    @Operation(summary = "Checks if a given sensor is available.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ok", content = @Content(schema = @Schema(implementation = EndpointAvailability.class))),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
@@ -71,7 +73,7 @@ public class KaaRestController extends AbstractController {
                                 .build()));
     }
 
-    @Operation(summary = "Get a set of endpoints providing details information about each available sensor")
+    @Operation(summary = "Returns all the sensors available fir a given endpointId.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ok", content = @Content(array = @ArraySchema(schema = @Schema(implementation = String.class)))),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = BaseResponse.class))),
@@ -84,6 +86,7 @@ public class KaaRestController extends AbstractController {
                         kaaService.getApplicationDataNames(endpointId)));
     }
 
+    @Operation(summary = "Returns a set of data for a specific range of time")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ok",
                     content = {
@@ -107,6 +110,7 @@ public class KaaRestController extends AbstractController {
         return createResponse(kaaEndPointDataDTOS, format);
     }
 
+    @Operation(summary = "Stores information on Kaa by MQTT protocol")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Accepted"),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(schema = @Schema(implementation = BaseResponse.class))),

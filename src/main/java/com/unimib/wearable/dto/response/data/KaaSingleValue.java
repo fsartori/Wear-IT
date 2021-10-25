@@ -1,14 +1,18 @@
 package com.unimib.wearable.dto.response.data;
 
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 
-@Getter
+@EqualsAndHashCode(callSuper = true)
+@Data
 @SuperBuilder
+@NoArgsConstructor
 public class KaaSingleValue extends KaaValue implements Serializable {
 
-    private final String value;
+    private String value;
 
 }

@@ -3,10 +3,10 @@ package com.unimib.wearable;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 class WearableApplicationTests {
 
-    @Test
+    //@Test
     void contextLoads() {
     }
 

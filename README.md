@@ -24,12 +24,27 @@ A Redis docker image is required for a correct boot of the application
 
 https://hub.docker.com/_/redis
 
+Docker compose is required in order to start the application with a single command
+
+https://docs.docker.com/compose/install/
+
 #Usage
 
-In order to run the application move to the root of the project and
-lunch the following command
+In order to build and start the application with a single command,
+move to the root of the project and run 
 
 ```docker-compose up --build```
+
+you can also run the application without docker-compose by running the following commands
+
+create the docker image
+* ```./gradlew bootBuildImage --imageName=WearSensorAPI ```
+
+start Redis
+* ```docker run --name some-redis -d redis```
+
+start WearSensorAPI
+* ```docker run --name wearsensor-api```
 
 #Play
 

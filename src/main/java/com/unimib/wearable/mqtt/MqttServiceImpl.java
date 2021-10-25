@@ -59,7 +59,7 @@ public class MqttServiceImpl implements MqttService {
             while (retries > 0 && !isConnected) {
                 if (!mqttClient.isConnected()) {
                     log.info("reconnecting to mqttServer ({}) - attempt {}", server, attempts++);
-                    reconnectToServer();
+                    connectToServer();
                     retries--;
                 } else {
                     log.info("connection established");

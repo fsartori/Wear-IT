@@ -38,7 +38,7 @@ public class AppEndpointDeserializer extends StdDeserializer<KaaEndPointDataDTO>
     public KaaEndPointDataDTO deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException {
         JsonNode root = jsonParser.getCodec().readTree(jsonParser);
 
-        Map<String, List<KaaValue>> deviceDataSample = Collections.emptyMap();
+        Map<String, List<KaaValue>> deviceDataSample = new HashMap<>();
 
         StreamSupport.stream(root.spliterator(), PARALLEL_STREAM)
                 .forEach(endpoint -> endpoint.fields().forEachRemaining(device -> putToMap(device, deviceDataSample)));

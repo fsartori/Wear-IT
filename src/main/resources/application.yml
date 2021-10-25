@@ -4,7 +4,7 @@ spring.banner.image.width: 60
 spring.banner.image.height: 40
 spring.banner.image.pixelmode: BLOCK
 
-server.servlet.context-path: /wearsensor-api
+server.servlet.context-path: /wearsensor
 server.port: 8080
 
 webclient:
